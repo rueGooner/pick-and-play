@@ -63,7 +63,7 @@ export default function HeaderSection() {
 
         {/* Desktop Sign In */}
         <div className="hidden md:flex md:flex-col lg:flex-row gap-2 lg:flex-none">
-          <Link
+          {/* <Link
             href="/login"
             className="border border-emerald-600 text-emerald-600 text-sm px-4 py-2 rounded-md hover:bg-emerald-100 transition font-semibold  text-center lg:flex lg:items-center lg:justify-center"
           >
@@ -74,7 +74,7 @@ export default function HeaderSection() {
             className="bg-emerald-600 text-white text-sm px-4 py-2 rounded-md hover:bg-emerald-700 transition font-semibold  text-center lg:flex lg:items-center lg:justify-center lg:text-xs"
           >
             Sign Up
-          </Link>
+          </Link> */}
         </div>
 
         {/* Mobile Menu */}
@@ -137,7 +137,7 @@ export default function HeaderSection() {
                   Contact Us
                 </Link>
                 <div className="border-t border-emerald-100 my-3"></div>
-                <Link
+                {/* <Link
                   href="/login"
                   className="px-4 py-2 border border-emerald-600 text-emerald-700 rounded-md text-center hover:bg-emerald-50 transition"
                 >
@@ -148,7 +148,7 @@ export default function HeaderSection() {
                   className="px-4 py-2 bg-emerald-600 text-white rounded-md text-center hover:bg-emerald-700 transition"
                 >
                   Sign Up
-                </Link>
+                </Link> */}
               </nav>
             </SheetContent>
           </Sheet>
