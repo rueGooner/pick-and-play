@@ -23,7 +23,10 @@ export const profileRegistrationSchema = z
     email: z.email(),
     firstname: z.string().min(2, "First name must be at least 2 characters."),
     lastname: z.string().min(2, "Last name must be at least 2 characters."),
-    role: z.enum(["player", "guardian", "coach"], "You must select one role."),
+    role: z.enum(
+      ["player", "guardian", "coach", "admin"],
+      "You must select one role."
+    ),
     phone: z.string().min(10, "Please enter a valid phone number."),
     password: z.string().min(6, "Password must be at least 6 characters."),
     confirmPassword: z
