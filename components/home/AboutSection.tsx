@@ -1,11 +1,11 @@
 export default function AboutSection() {
   return (
     <div
-      className="p-10 
+      className="bg-white w-full p-10 
     "
     >
       <div className="max-w-3xl mx-auto px-6 py-12">
-        <h1 className="text-2xl font-bold text-emerald-700 mb-6 text-center">
+        <h1 className="text-3xl font-bold text-emerald-700 mb-6 text-center">
           Welcome
         </h1>
         <p className="text-slate-700 leading-relaxed mb-6">
