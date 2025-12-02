@@ -1,4 +1,5 @@
 import AboutSection from "@/components/home/AboutSection";
+import ContactFormSection from "@/components/home/ContactFormSection";
 import FrequentQuestionSection from "@/components/home/FrequentQuestionSection";
 import HeaderSection from "@/components/home/HeaderSection";
 import ImageSlider from "@/components/home/ImageSlider";
@@ -16,6 +17,7 @@ export default function Home() {
         <RoadToSection />
         <FrequentQuestionSection />
       </main>
+      <ContactFormSection />
       <FooterSection />
     </div>
   );
