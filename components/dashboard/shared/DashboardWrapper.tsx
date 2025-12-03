@@ -7,15 +7,6 @@ import {
 } from "@/lib/menus/sidebar.navigation";
 import { supabaseClient } from "@/lib/supabase/client";
 import { NavigationGroup } from "@/types/navigation.type";
-import {
-  Calendar1Icon,
-  ListCheckIcon,
-  Settings,
-  UserCircle,
-  UserCog,
-  UserPlus,
-  WrenchIcon,
-} from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import MobileSidebar from "./MobileSidebar";

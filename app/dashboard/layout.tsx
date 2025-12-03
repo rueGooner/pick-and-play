@@ -6,10 +6,9 @@ export default async function DashboardLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { user } = await getAuthenticatedUser();
-  console.log(user); // null on page load
+  const { profile } = await getAuthenticatedUser();
   return (
-    <DashboardWrapper user={user}>
+    <DashboardWrapper user={profile}>
       <p>DASHBOARD</p>
     </DashboardWrapper>
   );

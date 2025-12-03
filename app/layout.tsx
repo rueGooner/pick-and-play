@@ -1,17 +1,9 @@
 import { Toaster } from "sonner";
 import "./globals.css";
 import type { Metadata } from "next";
-import {
-  Geist,
-  Geist_Mono,
-  Exo_2,
-  Raleway,
-  Barlow_Semi_Condensed,
-  Lato,
-} from "next/font/google";
+import { Lato } from "next/font/google";
 import "./globals.css";
 import QueryProvider from "./query-provider";
-import HeaderSection from "@/components/home/HeaderSection";
 
 const lato = Lato({
   variable: "--lato",
@@ -31,7 +23,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${lato.className} font-thin`}>
+    <html
+      suppressHydrationWarning
+      lang="en"
+      className={`${lato.className} font-thin`}
+    >
       <body>
         <QueryProvider>
           {children}

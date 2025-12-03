@@ -12,7 +12,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { NavigationGroup } from "@/types/navigation.type";
-import { Link, UserCircle, UserCog } from "lucide-react";
+import { UserCircle, UserCog } from "lucide-react";
+import Link from "next/link";
 
 export default function DesktopSidebar({
   navigationItems,
@@ -33,9 +34,11 @@ export default function DesktopSidebar({
     "group flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors border border-transparent";
   const activeLink = "text-white bg-emerald-700 border-emerald-500";
   const idleLink =
-    "text-foreground hover:text-white hover:bg-emerald-700 hover:border-emerald-300 text-emerald-700";
+    "text-foreground hover:text-white hover:bg-emerald-700 hover:border-emerald-300 text-emerald-700 font-light";
   const iconBase = "h-4 w-4";
   const iconIdle = "opacity-80 group-hover:opacity-100";
+
+  console.log(user);
 
   return (
     <aside className="hidden md:flex flex-col md:col-span-1 bg-white border-r border-emerald-300">
@@ -49,7 +52,7 @@ export default function DesktopSidebar({
         <div className="space-y-4 p-4">
           {navigationItems.map((group) => (
             <div key={group.title}>
-              <h2 className="text-xs uppercase text-emerald-500 font-semibold mb-2">
+              <h2 className="text-xs uppercase text-emerald-700 font-semibold mb-2">
                 {group.title}
               </h2>
 

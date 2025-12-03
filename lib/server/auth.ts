@@ -10,5 +10,11 @@ export async function getAuthenticatedUser() {
 
   if (!user) redirect("/login");
 
-  return { supabase, user };
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", user.id)
+    .single();
+
+  return { profile };
 }
