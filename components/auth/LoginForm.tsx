@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { supabaseClient } from "@/lib/supabase/client";
 import CustomInput from "../shared/form/CustomInput";
-import { LoginFields } from "@/types/auth";
+import { LoginFields } from "@/types/auth.type";
 
 export default function LoginPage() {
   const router = useRouter();

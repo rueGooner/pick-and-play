@@ -69,12 +69,12 @@ export default function HeaderSection() {
           >
             Sign In
           </Link>
-          {/* <Link
+          <Link
             href="/register"
             className="bg-emerald-600 text-white text-sm px-4 py-2 rounded-md hover:bg-emerald-700 transition font-semibold  text-center lg:flex lg:items-center lg:justify-center lg:text-xs"
           >
             Sign Up
-          </Link> */}
+          </Link>
         </div>
 
         {/* Mobile Menu */}
@@ -143,12 +143,12 @@ export default function HeaderSection() {
                 >
                   Sign In
                 </Link>
-                {/* <Link
+                <Link
                   href="/register"
                   className="px-4 py-2 bg-emerald-600 text-white rounded-md text-center hover:bg-emerald-700 transition"
                 >
                   Sign Up
-                </Link> */}
+                </Link>
               </nav>
             </SheetContent>
           </Sheet>
