@@ -1,16 +1,23 @@
 import { Toaster } from "sonner";
 import "./globals.css";
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Exo_2, Raleway } from "next/font/google";
+import {
+  Geist,
+  Geist_Mono,
+  Exo_2,
+  Raleway,
+  Barlow_Semi_Condensed,
+  Lato,
+} from "next/font/google";
 import "./globals.css";
 import QueryProvider from "./query-provider";
 import HeaderSection from "@/components/home/HeaderSection";
 
-const raleway = Raleway({
-  variable: "--raleway",
+const lato = Lato({
+  variable: "--lato",
   subsets: ["latin"],
   display: "swap",
-  weight: ["100", "300", "400", "600"],
+  weight: ["100", "300", "400", "700"],
 });
 
 export const metadata: Metadata = {
@@ -24,11 +31,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${raleway.className} font-light`}>
+    <html lang="en" className={`${lato.className} font-thin`}>
       <body>
         <QueryProvider>
-          <HeaderSection />
-
           {children}
           <Toaster richColors position="top-center" />
         </QueryProvider>

@@ -43,7 +43,7 @@ export default function RegisterForm() {
 
   const onSubmit = async (data: RegisterSchema) => {
     await profileCreation.mutateAsync(data);
-    // reset();
+    reset();
   };
 
   const onFailedSubmit = (

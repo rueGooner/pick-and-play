@@ -14,7 +14,8 @@ export function useRegistration() {
     },
 
     onSuccess: () => {
-      console.log("SUCCESSFUL - REDIRECT");
+      toast.success("Registration Complete.");
+      router.push("/dashboard/onboarding");
     },
 
     onError: (error: unknown) => {

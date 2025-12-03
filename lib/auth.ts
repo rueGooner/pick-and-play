@@ -62,5 +62,5 @@ export async function getCurrentProfile() {
 
   if (error) throw error;
 
-  return profile;
+  return { profile, supabase };
 }
