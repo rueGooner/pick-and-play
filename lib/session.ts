@@ -1,8 +1,9 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { ensureOnboarding } from "./ensure-onboarding";
 
 export async function updateSession(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({ request });
+  const supabaseResponse = NextResponse.next();
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -11,7 +12,6 @@ export async function updateSession(request: NextRequest) {
       cookies: {
         getAll: () => request.cookies.getAll(),
         setAll: (cookiesToSet) => {
-          supabaseResponse = NextResponse.next({ request });
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options)
           );
@@ -67,35 +67,7 @@ export async function updateSession(request: NextRequest) {
       });
     }
 
-    console.log("PROFILE", profile);
-
-    if (profile?.role === "coach") {
-      const { data: coachProfile } = await supabase
-        .from("coach_profiles")
-        .select("is_onboarded, profile_complete")
-        .eq("id", user.id)
-        .maybeSingle();
-
-      const onOnboardingPage = pathname.startsWith(
-        "/dashboard/coach/onboarding"
-      );
-
-      if (coachProfile && coachProfile.profile_complete === false) {
-        if (!onOnboardingPage) {
-          const url = request.nextUrl.clone();
-          url.pathname = "/dashboard/coach/onboarding";
-          return NextResponse.redirect(url);
-        }
-      }
-
-      if (coachProfile && coachProfile.profile_complete === true) {
-        if (onOnboardingPage) {
-          const url = request.nextUrl.clone();
-          url.pathname = "/dashboard/coach";
-          return NextResponse.redirect(url);
-        }
-      }
-    }
+    await ensureOnboarding(request, supabase, user.id);
   }
 
   return supabaseResponse;

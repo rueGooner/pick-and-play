@@ -68,7 +68,7 @@ export default function DashboardWrapper({
         pathname={pathname}
       />
 
-      <main className="flex flex-col flex-1 min-h-0 md:col-span-4 relative">
+      <main className="flex flex-col flex-1 md:col-span-4 relative">
         {children}
       </main>
     </div>

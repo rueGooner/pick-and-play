@@ -7,9 +7,6 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }>) {
   const { profile } = await getAuthenticatedUser();
-  return (
-    <DashboardWrapper user={profile}>
-      <p>DASHBOARD</p>
-    </DashboardWrapper>
-  );
+
+  return <DashboardWrapper user={profile}>{children}</DashboardWrapper>;
 }
