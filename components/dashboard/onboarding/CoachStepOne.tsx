@@ -4,7 +4,7 @@ import CustomInput from "@/components/shared/form/CustomInput";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useUploadStepOne } from "@/hooks/onboarding/useUploadStepOne";
+import { useOnboardingStepOne } from "@/hooks/onboarding/useOnboarding";
 import { lookupPostcode } from "@/lib/location";
 import { coachStepOneSchema } from "@/schemas/onboarding.schema";
 import { CoachOnboardingStepOne } from "@/types/onboarding.type";
@@ -18,7 +18,7 @@ export default function CoachStepOne({
   firstname: string;
   lastname: string;
 }) {
-  const updateStepOne = useUploadStepOne();
+  const updateStepOne = useOnboardingStepOne();
   const { register, handleSubmit, watch, setValue, clearErrors, setError } =
     useForm<CoachOnboardingStepOne>({
       resolver: zodResolver(coachStepOneSchema),

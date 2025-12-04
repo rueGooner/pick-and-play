@@ -27,3 +27,66 @@ export const coachStepOneSchema = z.object({
 
   avatar_url: z.url().optional(),
 });
+
+export const coachStepTwoSchema = z.object({
+  bio: z
+    .string()
+    .min(20, "Please provide at least 20 characters.")
+    .nonempty("Coach Biography is required"),
+
+  lta_number: z.string().min(4, "LTA Number seems too short."),
+
+  lta_level: z
+    .number()
+    .min(1, "Level must be between 1 and 5")
+    .max(5, "Level must be between 1 and 5"),
+
+  years_experience: z.number().min(0, "Years experience must be 0 or greater"),
+});
+
+export const coachStepThreeSchema = z.object({
+  specialties: z.array(z.string()).min(1, "Select at least one specialty."),
+  languages: z.array(z.string()).min(1, "Select at least one language."),
+  price_per_hour: z.number(),
+  price_group_per_hour: z.number(),
+  service_radius_miles: z.number(),
+  accepting_bookings: z.boolean(),
+});
+
+const timeRangeRegex = /^([01]\d|2[0-3]):[0-5]\d-([01]\d|2[0-3]):[0-5]\d$/;
+
+const timeRangeSchema = z
+  .string()
+  .regex(timeRangeRegex, "Time must be in HH:MM-HH:MM format");
+
+export const coachServiceAreaSchema = z.object({
+  venue_name: z.string().min(2, "Venue name must be at least 2 characters"),
+  address_line: z.string().min(2, "Address must be at least 2 characters"),
+  town: z.string().min(2, "Town/City is required"),
+  postcode: z.string().min(4, "Postcode is required"),
+  lat: z.number().refine((v) => !isNaN(v), "Latitude must be a number"),
+  lng: z.number().refine((v) => !isNaN(v), "Longitude must be a number"),
+});
+
+export const coachWeeklyAvailabilitySchema = z.object({
+  monday: z.array(timeRangeSchema).optional(),
+  tuesday: z.array(timeRangeSchema).optional(),
+  wednesday: z.array(timeRangeSchema).optional(),
+  thursday: z.array(timeRangeSchema).optional(),
+  friday: z.array(timeRangeSchema).optional(),
+  saturday: z.array(timeRangeSchema).optional(),
+  sunday: z.array(timeRangeSchema).optional(),
+});
+
+export const coachOnboardingStepFourSchema = z.object({
+  availability: coachWeeklyAvailabilitySchema.refine(
+    (days) => Object.values(days).some((slots) => slots && slots.length > 0),
+    {
+      message: "You must provide availability for at least one day",
+    }
+  ),
+
+  service_areas: z
+    .array(coachServiceAreaSchema)
+    .min(1, "Please add at least one service area"),
+});
