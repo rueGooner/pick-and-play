@@ -4,6 +4,7 @@ import { BaseProfile } from "@/types/profiles.type";
 import CoachStepOne from "./CoachStepOne";
 import CoachStepTwo from "./CoachStepTwo";
 import CoachStepThree from "./CoachStepThree";
+import CoachStepFour from "./CoachStepFour";
 
 export default function CoachOnboarding({
   step,
@@ -31,6 +32,7 @@ export default function CoachOnboarding({
         )}
         {step === 2 && <CoachStepTwo />}
         {step === 3 && <CoachStepThree />}
+        {step === 4 && <CoachStepFour />}
       </div>
     </div>
   );

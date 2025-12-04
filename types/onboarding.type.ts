@@ -39,12 +39,13 @@ export type CoachServiceArea = {
   lng: number;
 };
 
-export type CoachWeeklyAvailability = {
-  monday?: string[];
-  tuesday?: string[];
-  wednesday?: string[];
-  thursday?: string[];
-  friday?: string[];
-  saturday?: string[];
-  sunday?: string[];
-};
+type Day =
+  | "monday"
+  | "tuesday"
+  | "wednesday"
+  | "thursday"
+  | "friday"
+  | "saturday"
+  | "sunday";
+
+export type CoachWeeklyAvailability = Partial<Record<Day, string[]>>;
