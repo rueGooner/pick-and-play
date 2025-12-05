@@ -79,14 +79,36 @@ export const coachWeeklyAvailabilitySchema = z.object({
 });
 
 export const coachOnboardingStepFourSchema = z.object({
-  availability: coachWeeklyAvailabilitySchema.refine(
-    (days) => Object.values(days).some((slots) => slots && slots.length > 0),
-    {
-      message: "You must provide availability for at least one day",
-    }
-  ),
+  availability: z
+    .array(
+      z.object({
+        day_of_week: z.enum([
+          "monday",
+          "tuesday",
+          "wednesday",
+          "thursday",
+          "friday",
+          "saturday",
+          "sunday",
+        ]),
+        start_time: z.string().min(1),
+        end_time: z.string().min(1),
+      })
+    )
+    .max(21),
 
-  service_areas: z
-    .array(coachServiceAreaSchema)
-    .min(1, "Please add at least one service area"),
+  venue_ids: z.array(z.uuid()),
+
+  custom_venues: z
+    .array(
+      z.object({
+        venue_name: z.string().min(2),
+        address_line: z.string().min(2),
+        town: z.string().min(2),
+        postcode: z.string().min(3),
+        lat: z.number(),
+        lng: z.number(),
+      })
+    )
+    .default([]),
 });

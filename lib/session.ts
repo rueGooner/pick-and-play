@@ -1,6 +1,5 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-import { ensureOnboarding } from "./ensure-onboarding";
 
 export async function updateSession(request: NextRequest) {
   const supabaseResponse = NextResponse.next();
@@ -24,14 +23,15 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { pathname, search } = request.nextUrl;
+  const url = request.nextUrl.clone();
+  const { pathname } = url;
 
+  // 1. Skip API routes
   if (pathname.startsWith("/api/")) {
-    return NextResponse.next();
+    return supabaseResponse;
   }
 
   const PROTECTED_PATHS = ["/dashboard", "/coach", "/admin"];
-
   const isProtected = PROTECTED_PATHS.some((p) => pathname.startsWith(p));
 
   const isAuthRoute =
@@ -39,35 +39,79 @@ export async function updateSession(request: NextRequest) {
     pathname.startsWith("/auth") ||
     pathname.startsWith("/error");
 
+  const isOnboardingPage = pathname.startsWith("/dashboard/onboarding");
+
+  // 2. Not logged in: block protected pages
   if (!user && isProtected && !isAuthRoute) {
-    const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);
   }
 
-  if (user && isAuthRoute) {
-    const redirect = new URL("/dashboard", request.url);
-    return NextResponse.redirect(redirect);
+  // 3. If no user, nothing more to do
+  if (!user) {
+    return supabaseResponse;
   }
 
-  if (user) {
-    const { data: profile, error: profileError } = await supabase
-      .from("profiles")
-      .select("id, role")
-      .eq("id", user.id)
+  // 4. We *do* have a user → get their profile
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("id, role")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  // Create a basic profile if it doesn't exist yet
+  if (!profile) {
+    await supabase.from("profiles").insert({
+      id: user.id,
+      email: user.email,
+      firstname: user.user_metadata?.first_name ?? "New",
+      lastname: user.user_metadata?.last_name ?? "User",
+      role: "player",
+    });
+
+    // Treat as player for this request
+    url.pathname = "/dashboard";
+    return NextResponse.redirect(url);
+  }
+
+  // 5. Coach onboarding logic
+  if (profile.role === "coach") {
+    const { data: coachInfo } = await supabase
+      .from("coach_info")
+      .select("profile_complete")
+      .eq("id", profile.id)
       .maybeSingle();
 
-    if (!profile && !profileError) {
-      await supabase.from("profiles").insert({
-        id: user.id,
-        email: user.email,
-        firstname: user.user_metadata?.first_name ?? "New",
-        lastname: user.user_metadata?.last_name ?? "User",
-        role: "player",
-      });
+    const needsOnboarding = !coachInfo || coachInfo.profile_complete !== true;
+
+    // a) If coach needs onboarding and is NOT already on onboarding → send them there
+    if (needsOnboarding && !isOnboardingPage) {
+      url.pathname = "/dashboard/onboarding";
+      return NextResponse.redirect(url);
     }
 
-    await ensureOnboarding(request, supabase, user.id);
+    // b) If coach is done onboarding but is on onboarding page → send to dashboard
+    if (!needsOnboarding && isOnboardingPage) {
+      url.pathname = "/dashboard";
+      return NextResponse.redirect(url);
+    }
+
+    // c) If coach is on an auth route (/login, /auth) → send to correct spot
+    if (isAuthRoute) {
+      url.pathname = needsOnboarding ? "/dashboard/onboarding" : "/dashboard";
+      return NextResponse.redirect(url);
+    }
+
+    // Otherwise, allow through
+    return supabaseResponse;
+  }
+
+  // 6. Non-coach roles (player/admin/etc.)
+
+  if (isAuthRoute) {
+    // Already logged in and on /login or /auth → just send to dashboard (or per-role)
+    url.pathname = "/dashboard";
+    return NextResponse.redirect(url);
   }
 
   return supabaseResponse;

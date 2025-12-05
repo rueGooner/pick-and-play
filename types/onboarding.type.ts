@@ -26,11 +26,25 @@ export type CoachOnboardingStepThree = {
 };
 
 export type CoachOnboardingStepFour = {
-  availability: CoachWeeklyAvailability;
-  service_areas: CoachServiceArea[];
+  availability: CoachAvailabilityEntry[];
+  venue_ids: string[];
+  custom_venues?: CoachCustomVenue[];
 };
 
-export type CoachServiceArea = {
+export type CoachAvailabilityEntry = {
+  day_of_week:
+    | "monday"
+    | "tuesday"
+    | "wednesday"
+    | "thursday"
+    | "friday"
+    | "saturday"
+    | "sunday";
+  start_time: string; // "HH:MM"
+  end_time: string; // "HH:MM"
+};
+
+export type CoachCustomVenue = {
   venue_name: string;
   address_line: string;
   town: string;
@@ -39,13 +53,8 @@ export type CoachServiceArea = {
   lng: number;
 };
 
-type Day =
-  | "monday"
-  | "tuesday"
-  | "wednesday"
-  | "thursday"
-  | "friday"
-  | "saturday"
-  | "sunday";
-
-export type CoachWeeklyAvailability = Partial<Record<Day, string[]>>;
+export type CoachStepFourPayload = {
+  availability: CoachAvailabilityEntry[];
+  venue_ids: string[];
+  custom_venues?: CoachCustomVenue[];
+};

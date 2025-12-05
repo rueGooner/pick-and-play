@@ -32,7 +32,7 @@ export default function CoachOnboarding({
         )}
         {step === 2 && <CoachStepTwo />}
         {step === 3 && <CoachStepThree />}
-        {step === 4 && <CoachStepFour />}
+        {step === 4 && <CoachStepFour profile={profile} />}
       </div>
     </div>
   );

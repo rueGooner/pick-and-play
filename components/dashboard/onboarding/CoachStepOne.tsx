@@ -53,16 +53,20 @@ export default function CoachStepOne({
         <span className="col-span-2 text-sm font-semibold text-slate-100 bg-orange-400 rounded p-2">
           You cannot edit your name during onboarding.
         </span>
-        <div>
-          <Label>Firstname</Label>
+        <div className="mt-2 flex flex-col gap-1">
+          <Label className="text-left block text-sm/6 font-medium text-slate-700">
+            Firstname
+          </Label>
           <Input
             readOnly
             value={firstname}
             className="font-semibold text-emerald-700"
           />
         </div>
-        <div>
-          <Label>Lastname</Label>
+        <div className="mt-2 flex flex-col gap-1">
+          <Label className="text-left block text-sm/6 font-medium text-slate-700">
+            Lastname
+          </Label>
           <Input
             readOnly
             value={lastname}

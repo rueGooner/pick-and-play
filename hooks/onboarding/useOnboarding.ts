@@ -1,11 +1,13 @@
 "use client";
 
 import {
+  handleCompleteCoachOnboarding,
   handleOnboardingCoachStepThree,
   handleOnboardingCoachStepTwo,
   handleOnboardingStepOne,
 } from "@/lib/onboarding/update-profiles";
 import {
+  CoachOnboardingStepFour,
   CoachOnboardingStepOne,
   CoachOnboardingStepThree,
   CoachOnboardingStepTwo,
@@ -64,6 +66,24 @@ export function useOnboardingCoachStepThree() {
 
     onError: () => {
       toast.error("Error during Step Two");
+    },
+  });
+}
+
+export function useCompleteOnboardingSteps() {
+  const router = useRouter();
+  return useMutation({
+    mutationFn: async (payload: CoachOnboardingStepFour) => {
+      return await handleCompleteCoachOnboarding(payload);
+    },
+
+    onSuccess: () => {
+      toast.success("Profile Complete");
+      router.push("/dashboard");
+    },
+
+    onError: () => {
+      toast.error("An error occured whilst completing onboarding");
     },
   });
 }

@@ -24,16 +24,16 @@ export async function ensureOnboarding(
 
   // 3. COACH ONBOARDING LOGIC
   if (profile.role === "coach") {
-    const { data: coachProfile } = await supabase
-      .from("coaches")
+    const { data: coachInfo } = await supabase
+      .from("coach_info")
       .select("profile_complete")
       .eq("id", profile.id)
-      .single();
+      .maybeSingle();
 
     const isOnboardingPage = pathname.startsWith("/dashboard/onboarding");
-    const needsOnboarding = !coachProfile?.profile_complete;
+    const needsOnboarding = !coachInfo || coachInfo.profile_complete !== true;
 
-    if (needsOnboarding && !isOnboardingPage) {
+    if (needsOnboarding && !!isOnboardingPage) {
       url.pathname = "/dashboard/onboarding";
       return NextResponse.redirect(url);
     }

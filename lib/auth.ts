@@ -42,6 +42,15 @@ export async function handleLogin(formData: {
 
   if (error) throw error;
 
+  const { session } = data;
+  if (session) {
+    await fetch("/api/auth/set", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ session }),
+    });
+  }
+
   return data.user;
 }
 
