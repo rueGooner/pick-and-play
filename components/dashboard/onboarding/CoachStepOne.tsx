@@ -19,19 +19,24 @@ export default function CoachStepOne({
   lastname: string;
 }) {
   const updateStepOne = useOnboardingStepOne();
-  const { register, handleSubmit, watch, setValue, clearErrors, setError } =
+  const { register, handleSubmit, getValues, setValue, clearErrors, setError } =
     useForm<CoachOnboardingStepOne>({
       resolver: zodResolver(coachStepOneSchema),
     });
 
   const handlePostcodeLookup = async () => {
-    const rawPostcode = watch("postcode");
+    const rawPostcode = getValues("postcode");
+    
+    if (!rawPostcode) return;
 
     try {
+      console.log("Looking up postcode", rawPostcode);
       clearErrors("postcode");
 
       const result = await lookupPostcode(rawPostcode);
 
+      console.log("Result", result);
+      
       setValue("lat", result.lat);
       setValue("lng", result.lng);
       setValue("postcode", result.postcode);
@@ -116,6 +121,7 @@ export default function CoachStepOne({
           register={register}
           type="number"
           step="any"
+          readOnly
         />
         <CustomInput
           label="Longitude"
@@ -123,6 +129,7 @@ export default function CoachStepOne({
           register={register}
           type="number"
           step="any"
+          readOnly
         />
       </div>
       <div className="flex justify-end mt-auto">

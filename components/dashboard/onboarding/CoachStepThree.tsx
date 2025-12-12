@@ -12,7 +12,6 @@ import {
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Toggle } from "@/components/ui/toggle";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useOnboardingCoachStepThree } from "@/hooks/onboarding/useOnboarding";
 import { LANGUAGES, SPECIALTY_OPTIONS } from "@/lib/specialties";
 import { coachStepThreeSchema } from "@/schemas/onboarding.schema";
@@ -29,6 +28,7 @@ export default function CoachStepThree() {
       defaultValues: {
         specialties: [],
         languages: [],
+        accepting_bookings: false,
       },
     });
 
@@ -123,7 +123,7 @@ export default function CoachStepThree() {
                   Currently Accepting Bookings
                 </FieldLabel>
                 <FieldDescription>
-                  Enable when you're accepting bookings or not.
+                  Enable when you&apos;re accepting bookings or not.
                 </FieldDescription>
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
@@ -132,7 +132,7 @@ export default function CoachStepThree() {
               <Switch
                 id="accepting_bookings"
                 name={field.name}
-                checked={field.value}
+                checked={field.value ?? false}
                 onCheckedChange={field.onChange}
                 aria-invalid={fieldState.invalid}
               />

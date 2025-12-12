@@ -36,7 +36,7 @@ export default function CustomInput<T extends FieldValues>({
   autoComplete,
   error,
   className = "mt-2 flex flex-col gap-1",
-  inputClassName = "p-2 bg-slate-50 border border-emerald-300 text-emerald-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-emerald-100 dark:placeholder-emerald-800 dark:text-emerald-800 dark:focus:ring-blue-500 dark:focus:border-blue-500",
+  inputClassName = "p-2 bg-slate-50 border border-emerald-300 text-emerald-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-emerald-100 dark:placeholder-emerald-800 dark:text-emerald-800 dark:focus:ring-blue-500 dark:focus:border-blue-500 font-light",
   labelClassName = "text-left block text-sm/6 font-medium text-slate-700",
   readOnly = false,
   step,

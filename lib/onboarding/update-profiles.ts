@@ -162,53 +162,133 @@ export async function handleCompleteCoachOnboarding(
     .eq("id", session.user.id)
     .single();
 
-  const { availability, custom_venues, venue_ids } = formData;
+  if (!profile) throw new Error("Profile not found");
 
-  console.log({ availability, custom_venues, venue_ids });
-  // await supabase.from("coach_availability").delete().eq("coach_id", profile.id);
+  const { availability, custom_venues = [], venue_ids = [] } = formData;
 
-  // const insertPayload = availability.map((a) => ({
-  //   coach_id: profile.id,
-  //   day_of_week: a.day_of_week,
-  //   start_time: a.start_time,
-  //   end_time: a.end_time,
-  // }));
+  // Handle availability: delete existing and insert new
+  const { error: deleteAvailabilityError } = await supabase
+    .from("coach_availability")
+    .delete()
+    .eq("coach_profile_id", profile.id);
 
-  // if (formData.availability.length > 0) {
-  //   const { error: availabilityError } = await supabase
-  //     .from("coach_availability")
-  //     .insert(insertPayload);
+  if (deleteAvailabilityError)
+    throw new Error(
+      `Failed to delete existing availability: ${deleteAvailabilityError.message}`
+    );
 
-  //   if (availabilityError) throw new Error(availabilityError.message);
-  // }
+  if (availability.length > 0) {
+    // Valid day_of_week values
+    const validDays = [
+      "monday",
+      "tuesday",
+      "wednesday",
+      "thursday",
+      "friday",
+      "saturday",
+      "sunday",
+    ] as const;
 
-  // await supabase
-  //   .from("coach_service_areas")
-  //   .delete()
-  //   .eq("coach_id", profile.id);
+    // Filter out invalid availability entries (must have valid day_of_week, start_time, and end_time)
+    const validAvailability = availability.filter(
+      (a) =>
+        a.day_of_week &&
+        validDays.includes(a.day_of_week as typeof validDays[number]) &&
+        a.start_time &&
+        a.end_time &&
+        typeof a.start_time === "string" &&
+        typeof a.end_time === "string" &&
+        a.start_time.trim() !== "" &&
+        a.end_time.trim() !== ""
+    );
 
-  // if (formData.venue_ids.length > 0) {
-  //   const { error: venueError } = await supabase
-  //     .from("coach_service_areas")
-  //     .insert(
-  //       formData.venue_ids.map((venue_id) => ({
-  //         coach_id: profile.id,
-  //         venue_id,
-  //       }))
-  //     );
+    if (validAvailability.length > 0) {
+      const insertPayload = validAvailability.map((a) => ({
+        coach_profile_id: profile.id,
+        day_of_week: a.day_of_week,
+        start_time: a.start_time.trim(),
+        end_time: a.end_time.trim(),
+      }));
 
-  //   if (venueError) throw new Error(venueError.message);
+      const { error: availabilityError } = await supabase
+        .from("coach_availability")
+        .insert(insertPayload);
 
-  //   const { error: coachUpdateErr } = await supabase
-  //     .from("coaches")
-  //     .update({
-  //       profile_complete: true,
-  //       updated_at: new Date().toISOString(),
-  //     })
-  //     .eq("id", profile.id);
+      if (availabilityError)
+        throw new Error(
+          `Failed to insert availability: ${availabilityError.message}`
+        );
+    }
+  }
 
-  //   if (coachUpdateErr) throw new Error(coachUpdateErr.message);
+  // Handle custom venues: insert them into venues table first
+  let customVenueIds: string[] = [];
+  if (custom_venues.length > 0) {
+    const customVenuesPayload = custom_venues.map((venue) => ({
+      venue_name: venue.venue_name,
+      address_line: venue.address_line,
+      town: venue.town,
+      postcode: venue.postcode,
+      lat: venue.lat,
+      lng: venue.lng,
+    }));
 
-  //   return { success: true };
-  // }
+    const { data: insertedVenues, error: customVenueError } = await supabase
+      .from("venues")
+      .insert(customVenuesPayload)
+      .select("id");
+
+    if (customVenueError)
+      throw new Error(
+        `Failed to insert custom venues: ${customVenueError.message}`
+      );
+
+    customVenueIds = insertedVenues?.map((v) => v.id) || [];
+  }
+
+  // Combine regular venue_ids with custom venue IDs
+  const allVenueIds = [...venue_ids, ...customVenueIds];
+
+  // Handle service areas: delete existing and insert new
+  const { error: deleteServiceAreasError } = await supabase
+    .from("coach_service_areas")
+    .delete()
+    .eq("coach_id", profile.id);
+
+  if (deleteServiceAreasError)
+    throw new Error(
+      `Failed to delete existing service areas: ${deleteServiceAreasError.message}`
+    );
+
+  if (allVenueIds.length > 0) {
+    const { error: venueError } = await supabase
+      .from("coach_service_areas")
+      .insert(
+        allVenueIds.map((venue_id) => ({
+          coach_id: profile.id,
+          venue_id,
+        }))
+      );
+
+    if (venueError)
+      throw new Error(
+        `Failed to insert service areas: ${venueError.message}`
+      );
+  }
+
+  // Mark coach profile as complete
+  const { error: coachUpdateErr } = await supabase
+    .from("coaches")
+    .update({
+      profile_complete: true,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", profile.id);
+
+  if (coachUpdateErr)
+    throw new Error(
+      `Failed to update coach profile: ${coachUpdateErr.message}`
+    );
+
+  return { success: true };
 }
