@@ -4,20 +4,22 @@ import { useState, useEffect } from "react";
 import { supabaseClient } from "@/lib/supabase/client";
 
 export function useVenueSearch(query: string) {
-  const supabase = supabaseClient();
   const [results, setResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!query || query.length < 2) {
-      setResults([]);
       return;
     }
 
+    const supabase = supabaseClient();
     let active = true;
-    setLoading(true);
 
     const fetch = async () => {
+      if (active) {
+        setLoading(true);
+      }
+
       const { data } = await supabase
         .from("venues")
         .select("*")
@@ -37,5 +39,5 @@ export function useVenueSearch(query: string) {
     };
   }, [query]);
 
-  return { results, loading };
+  return { results: query && query.length >= 2 ? results : [], loading };
 }

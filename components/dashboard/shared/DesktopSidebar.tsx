@@ -38,8 +38,6 @@ export default function DesktopSidebar({
   const iconBase = "h-4 w-4";
   const iconIdle = "opacity-80 group-hover:opacity-100";
 
-  console.log(user);
-
   return (
     <aside className="hidden md:flex flex-col md:col-span-1 bg-white border-r border-emerald-300">
       {/* Logo */}

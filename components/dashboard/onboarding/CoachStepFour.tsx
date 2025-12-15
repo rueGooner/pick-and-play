@@ -228,11 +228,10 @@ export default function CoachStepFour({ profile }: { profile: BaseProfile }) {
                               venues.map((venue: VenueResponseItem) => {
                                 const selected: string[] = field.value ?? [];
                                 const checked = selected.includes(venue.id);
-                                console.log(field.value);
                                 return (
                                   <Label
                                     key={venue.id}
-                                    className="flex items-center gap-3 p-2 border rounded-md hover:bg-slate-50 cursor-pointer hover:bg-accent/50 flex items-start gap-3 rounded-lg border p-3 has-[[aria-checked=true]]:border-blue-600 has-[[aria-checked=true]]:bg-blue-50 dark:has-[[aria-checked=true]]:border-blue-900 dark:has-[[aria-checked=true]]:bg-blue-950"
+                                    className="flex items-start gap-3 p-2 border rounded-lg hover:bg-accent/50 cursor-pointer has-aria-checked:border-blue-600 has-aria-checked:bg-blue-50 dark:has-aria-checked:border-blue-900 dark:has-aria-checked:bg-blue-950"
                                   >
                                     <Checkbox
                                       id={venue.id}

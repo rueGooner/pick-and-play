@@ -30,13 +30,10 @@ export default function CoachStepOne({
     if (!rawPostcode) return;
 
     try {
-      console.log("Looking up postcode", rawPostcode);
       clearErrors("postcode");
 
       const result = await lookupPostcode(rawPostcode);
 
-      console.log("Result", result);
-      
       setValue("lat", result.lat);
       setValue("lng", result.lng);
       setValue("postcode", result.postcode);

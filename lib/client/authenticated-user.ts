@@ -1,14 +1,15 @@
-import { redirect } from "next/navigation";
-import { supabaseServer } from "../supabase/server";
+'use client';
 
-export async function getAuthenticatedUser() {
-  const supabase = await supabaseServer();
+import { supabaseClient } from "../supabase/client";
+
+export async function getClientAuthenticatedUser() {
+  const supabase = await supabaseClient();
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) redirect("/login");
+  if (!user) throw new Error();
 
   const { data: profile } = await supabase
     .from("profiles")
@@ -23,13 +24,11 @@ export async function getAuthenticatedUser() {
       .eq("id", profile.id)
       .single();
 
-    if (!data) redirect("/dashboard/onboarding");
-
     return {
       profile: data,
       email: profile.email,
     };
   }
 
-  return { profile, email: user.email };
+  return { supabase, profile, email: user.email };
 }

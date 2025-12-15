@@ -7,7 +7,7 @@ interface DashboardHeaderProps {
 }
 
 export const DashboardHeader: FC<DashboardHeaderProps> = ({ profile }) => (
-  <div className="bg-white rounded shadow-md p-6 relative">
+  <div className="bg-white rounded shadow-md p-6 m-8 relative">
     <h2 className="text-xl font-semibold text-slate-700 mb-2">
       Welcome back {`${profile.firstname} ${profile.lastname}`}
     </h2>

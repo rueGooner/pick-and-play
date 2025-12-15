@@ -68,7 +68,7 @@ export default function RegisterForm() {
     >
       <h1 className="text-2xl font-semibold text-center text-slate-600">
         Registration
-        <div className="mt-2 h-[2px] w-24 bg-gradient-to-r from-emerald-500 to-teal-400 mx-auto rounded-full"></div>
+        <div className="mt-2 h-0.5 w-24 bg-linear-to-r from-emerald-500 to-teal-400 mx-auto rounded-full"></div>
       </h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
