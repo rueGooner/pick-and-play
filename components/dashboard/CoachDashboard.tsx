@@ -30,8 +30,8 @@ export default function CoachDashboard({ profile }: CoachDashboardProps) {
   console.log(sessions)
   // const bookings = await getCoachUpcomingBookings(1);
   return (
-    <>
-      <div className="grid gap-6 md:grid-cols-2 relative px-8">
+    <div className="bg-white gap-8 min-h-screen flex flex-col p-8">
+      <div className="grid gap-6 md:grid-cols-2 relative">
         <DashboardCard<SessionsWithCounts>
           cardData={sessions || []}
           title="Upcoming Sessions"
@@ -74,7 +74,7 @@ export default function CoachDashboard({ profile }: CoachDashboardProps) {
           )}
         </DashboardCard>
          <DashboardCard<SessionsWithCounts>
-          cardData={sessions.data || []}
+          cardData={sessions || []}
           title="Upcoming Sessions"
           description="Your upcoming available sessions."
           href="/dashboard/sessions"
@@ -244,6 +244,6 @@ export default function CoachDashboard({ profile }: CoachDashboardProps) {
           </CardFooter>
         </Card> */}
       </div>
-    </>
+    </div>
   );
 }

@@ -84,7 +84,15 @@ export async function handleOnboardingCoachStepTwo(
     updated_at: new Date().toISOString(),
   });
 
-  if (error) throw new Error(error.message);
+  if (error) {
+    // Check for duplicate LTA number constraint violation
+    if (error.message.includes("coaches_lta_number_key")) {
+      throw new Error(
+        "This LTA number is already registered. Please use a different LTA number or contact support if this is your number."
+      );
+    }
+    throw new Error(error.message);
+  }
 
   await supabase
     .from("profiles")
@@ -177,7 +185,9 @@ export async function handleCompleteCoachOnboarding(
       `Failed to delete existing availability: ${deleteAvailabilityError.message}`
     );
 
-  if (availability.length > 0) {
+  if (!availability || availability.length === 0) {
+    console.warn("No availability data provided - skipping availability insertion");
+  } else {
     // Valid day_of_week values
     const validDays = [
       "monday",
@@ -202,7 +212,10 @@ export async function handleCompleteCoachOnboarding(
         a.end_time.trim() !== ""
     );
 
-    if (validAvailability.length > 0) {
+
+    if (validAvailability.length === 0) {
+      console.warn("All availability entries were filtered out as invalid");
+    } else {
       const insertPayload = validAvailability.map((a) => ({
         coach_profile_id: profile.id,
         day_of_week: a.day_of_week,
@@ -212,12 +225,15 @@ export async function handleCompleteCoachOnboarding(
 
       const { error: availabilityError } = await supabase
         .from("coach_availability")
-        .insert(insertPayload);
+        .insert(insertPayload)
+        .select();
 
-      if (availabilityError)
+      if (availabilityError) {
+        console.error("Availability insert error:", availabilityError);
         throw new Error(
           `Failed to insert availability: ${availabilityError.message}`
         );
+      }
     }
   }
 

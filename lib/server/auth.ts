@@ -17,16 +17,20 @@ export async function getAuthenticatedUser() {
     .single();
 
   if (profile.role === "coach") {
-    const { data } = await supabase
+    const { data: coachInfo } = await supabase
       .from("coach_info")
       .select("*")
       .eq("id", profile.id)
-      .single();
+      .maybeSingle();
 
-    if (!data) redirect("/dashboard/onboarding");
+    // Merge profile and coachInfo, with coachInfo taking precedence for overlapping fields
+    // This ensures profile fields (role, onboarding_step) are always present
+    const mergedProfile = coachInfo 
+      ? { ...profile, ...coachInfo }
+      : profile;
 
     return {
-      profile: data,
+      profile: mergedProfile,
       email: profile.email,
     };
   }

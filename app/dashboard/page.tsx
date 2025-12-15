@@ -29,15 +29,13 @@ export default async function DashboardPage() {
           </h1>
         </div>
       </header>
-      <section className="grid">
         {!profile.is_onboarded ? (
           <StripeNotice profile={profile} />
         ) : (
           <DashboardHeader profile={profile} />
         )}
         {profile && profile.role && roleBasedDashboard(profile.role)}
-        <pre>{JSON.stringify(profile, null, 2)}</pre>
-      </section>
+        {/* <pre>{JSON.stringify(profile, null, 2)}</pre> */}
     </>
   );
 }

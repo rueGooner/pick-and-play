@@ -102,14 +102,13 @@ export async function updateSession(request: NextRequest) {
       return NextResponse.redirect(url);
     }
 
-    // Otherwise, allow through
+    // Otherwise, allow through (including when coach is on onboarding page and needs onboarding)
     return supabaseResponse;
   }
 
   // 6. Non-coach roles (player/admin/etc.)
-
+  // Only redirect if on auth routes, not if already on dashboard or onboarding
   if (isAuthRoute) {
-    // Already logged in and on /login or /auth → just send to dashboard (or per-role)
     url.pathname = "/dashboard";
     return NextResponse.redirect(url);
   }

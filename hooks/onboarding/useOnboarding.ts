@@ -46,8 +46,11 @@ export function useOnboardingCoachStepTwo() {
       router.refresh();
     },
 
-    onError: () => {
-      toast.error("Error during Step Two");
+    onError: (error: unknown) => {
+      console.log((error as Error))
+      toast.error(
+        (error as Error).message || "Error during Step Two"
+      );
     },
   });
 }

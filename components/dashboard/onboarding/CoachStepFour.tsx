@@ -85,7 +85,20 @@ export default function CoachStepFour({ profile }: { profile: BaseProfile }) {
   }, {} as Record<string, { item: CoachAvailabilityInput; index: number }[]>);
 
   const onSubmit = async (data: CoachStepFourPayload) => {
-    await onboardingComplete.mutateAsync(data);
+    // Filter out availability entries with empty times or missing day_of_week before submission
+    const filteredData: CoachStepFourPayload = {
+      ...data,
+      availability: data.availability.filter(
+        (entry) => 
+          entry.day_of_week &&
+          entry.start_time && 
+          entry.end_time && 
+          entry.start_time.trim() !== "" && 
+          entry.end_time.trim() !== ""
+      ),
+    };
+    
+    await onboardingComplete.mutateAsync(filteredData);
   };
 
   const handleAddingAvailability = () => {
@@ -159,12 +172,25 @@ export default function CoachStepFour({ profile }: { profile: BaseProfile }) {
                             className="border border-emerald-200 rounded-lg p-4 space-y-4 relative"
                           >
                             <div className="grid grid-cols-4 gap-4 items-end">
-                              <SelectField
-                                control={control}
-                                label="Day"
-                                options={DAY_OPTIONS}
+                              {/* Use Controller to ensure day_of_week is properly bound and submitted */}
+                              <Controller
                                 name={`availability.${index}.day_of_week`}
-                                disabled
+                                control={control}
+                                defaultValue={item.day_of_week || value}
+                                render={({ field }) => (
+                                  <div className="flex flex-col gap-1">
+                                    <label className="text-left block text-sm font-medium text-slate-700">
+                                      Day
+                                    </label>
+                                    <input
+                                      type="text"
+                                      {...field}
+                                      value={item.day_of_week || value}
+                                      readOnly
+                                      className="w-full border border-emerald-200 bg-gray-50 text-sm text-emerald-900 px-3 py-2 rounded-md cursor-not-allowed"
+                                    />
+                                  </div>
+                                )}
                               />
 
                               <CustomInput
